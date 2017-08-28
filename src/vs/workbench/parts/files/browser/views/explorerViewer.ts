@@ -749,12 +749,13 @@ export class FileDragAndDrop implements IDragAndDrop {
 			tree.collapse(source, false);
 		}
 
-		// Native only: when a DownloadURL attribute is defined on the data transfer it is possible to
-		// drag a file from the browser to the desktop and have it downloaded there.
-		if (!(data instanceof DesktopDragAndDropData)) {
-			if (source && !source.isDirectory) {
+		// Apply some datatransfer types to allow for dragging the element outside of the application
+		if (source) {
+			if (!source.isDirectory) {
 				originalEvent.dataTransfer.setData('DownloadURL', [MIME_BINARY, source.name, source.resource.toString()].join(':'));
 			}
+
+			originalEvent.dataTransfer.setData('text/plain', source.resource.fsPath);
 		}
 	}
 
